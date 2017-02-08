@@ -1,0 +1,11 @@
+version: "1.0"
+requires:
+  jsModule:
+  - standard
+  - mobile
+extends:
+  widget: standard/notifications/ProdCatNotificationManager
+  components:
+  - php
+  - css
+  overrideViewAndLogic: "true"

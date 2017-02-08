@@ -1,0 +1,44 @@
+/**
+ * base.css: Base CSS for NavTiles
+ */
+.rn_NavTiles.rn_Multiline {
+
+}
+
+@media screen and (min-width: 764px) {
+ .divHometiles .break_row{
+        clear: both;
+    }
+    
+    .divHometiles .navtilebox_1{
+        margin:auto;
+        width:20%;
+    }
+    
+    .divHometiles .navtilebox_2{
+        margin:auto;
+        width:40%;
+    }
+    
+    .divHometiles .navtilebox_4{
+        margin:auto;
+        width:80%;
+    }
+    
+    .divHometiles .navtilebox_6,.divHometiles .navtilebox_3{
+        margin:auto;
+        width:60%;
+    }
+    
+    .divHometiles .navtilebox_7,.divHometiles .navtilebox_8{
+        margin:auto;
+        width:80%;
+    }
+    
+    .divHometiles .navtilebox_7 .break_row,.divHometiles .navtilebox_9 .break_row{
+        margin-left:110px;
+    }
+    
+    
+    
+}

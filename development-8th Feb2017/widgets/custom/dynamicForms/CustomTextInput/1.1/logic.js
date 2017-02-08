@@ -1,0 +1,45 @@
+RightNow.namespace('Custom.Widgets.dynamicForms.CustomTextInput');
+Custom.Widgets.dynamicForms.CustomTextInput = RightNow.Widgets.TextInput.extend({ 
+    
+    overrides: {
+        
+        constructor: function(data, instanceID) {
+            // Call into parent's constructor
+            this.parent();
+						this.instanceID = instanceID;
+						this.data = data;
+						var fieldName = data.js.name;
+						this._inputField = document.getElementById("rn_" + this.instanceID + "_" + this.data.js.name);
+						//Subscribed the fired product id
+						RightNow.Event.subscribe("evt_selected_product", this._getcustomfields, this);
+        }
+
+    },
+
+    _getcustomfields: function(type, args)
+		{
+				prod_id = args[0]['data']['product_id'];
+				this.data.attrs.required=false;
+				var current_name = this.data.js.name;
+				current_form_id=this.data.attrs.form_id;
+				
+				// var labelnew = document.getElementById("rn_" + this.instanceID + "_" + "Label");
+				// console.log(labelnew);
+				// labelnew.innerHTML="Magic Online Username "+"<span class='rn_Required'> *</span>";
+				// this.data.attrs.required=true;
+				form_enabled_data=JSON.parse(document.getElementById('form_enabled_data').value);
+
+				//Do comparision now and make it valid now.
+				if(form_enabled_data['form_enabled']['form_id']==current_form_id){
+					 
+                    for(i=0;i<form_enabled_data['form_enabled']['required_fields'].length;i++){
+                    	if(form_enabled_data['form_enabled']['required_fields'][i]==current_name){
+                    		//labelnew = document.getElementById("rn_" + this.instanceID + "_" + "Label");
+
+                    		this.data.attrs.required=true;
+                    	}
+                    }
+				}				
+			    
+    } //_getcustomfields ends here.
+});

@@ -1,0 +1,25 @@
+.rn_Carousel .yui-carousel-element {
+    margin: 0;
+}
+
+.rn_Carousel .yui-carousel-vertical .yui-carousel-element {
+    margin: 0;
+}
+
+.rn_Carousel .yui-carousel-element li {
+    border: none;
+    margin: 0;
+}
+
+.rn_Carousel .yui-carousel .yui-carousel-item-selected {
+    border: none;
+    margin: 0;
+}
+
+.rn_Carousel .yui-carousel-vertical {
+    margin: 0;
+}
+
+.rn_Carousel .yui-carousel-button-focus {
+    outline: inherit;
+}
