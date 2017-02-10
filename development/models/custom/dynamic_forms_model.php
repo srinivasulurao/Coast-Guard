@@ -30,6 +30,7 @@ class Dynamic_forms_model extends \RightNow\Models\Base
 		$result = array();
 	}
 	
+	//Not my peice of cake.
 	function initForm()
 	{
 		// cat_id goes in as the key, and then inside the array is an custom fields that you want to show when that specific cf_id is selected
@@ -82,8 +83,8 @@ class Dynamic_forms_model extends \RightNow\Models\Base
 	function loadInputFields(){
 		$result = array();
 		$fields=$this->getFieldNameByCustomFieldID();
-		
-		$prodcat2dynamic_form_mas = RNCPHP\CO\prodcat2dynamic_form::find("cat_id = 0");
+		$cat_id=(int)getUrlParm('c'); 
+		$prodcat2dynamic_form_mas = RNCPHP\CO\prodcat2dynamic_form::find("cat_id = $cat_id");
 	    $applicable_forms=array();	 
         
 		foreach($prodcat2dynamic_form_mas as $prodcat2dynamic_form_row):
@@ -106,17 +107,15 @@ class Dynamic_forms_model extends \RightNow\Models\Base
 		    endwhile;
 		endforeach;
 
-		return $result; 
-	}
+		//$this->debug($result);
 
-	function getProductData($prod_id,$cat_id=0){
-		
+		return $result; 
 	}
 
 	function getFieldNameByCustomFieldID(){
           //Load the custom field report and find the custom field id.
 		    $filters = new RNCPHP\AnalyticsReportSearchFilterArray;
-			$ar= RNCPHP\AnalyticsReport::fetch(122950);
+			$ar= RNCPHP\AnalyticsReport::fetch(122954);
 			$arr= $ar->run();
 
 		    $nrows= $arr->count();
@@ -140,6 +139,7 @@ class Dynamic_forms_model extends \RightNow\Models\Base
              $result['form_id']=0;
              $fields=$this->getFieldNameByCustomFieldID();
 
+
              //$prodcat2dynamic_form_mas = RNCPHP\CO\prodcat2dynamic_form::find("prod_id={$prod_id}"," cat_id={$cat_id}");
              $prodcat2dynamic_form_mas=RNCPHP\ROQL::queryObject("SELECT CO.prodcat2dynamic_form FROM CO.prodcat2dynamic_form WHERE CO.prodcat2dynamic_form.prod_id='{$prod_id}' AND CO.prodcat2dynamic_form.cat_id='{$cat_id}'")->next();      
              while($prodcat2dynamic_form_row=$prodcat2dynamic_form_mas->next()):
@@ -147,15 +147,17 @@ class Dynamic_forms_model extends \RightNow\Models\Base
                 $form_id=$prodcat2dynamic_form_row->form_id;
              	    $cf2dynamic_form_mas = RNCPHP\ROQL::queryObject("SELECT CO.cf2dynamic_form FROM CO.cf2dynamic_form WHERE CO.cf2dynamic_form.form_id='{$form_id}' ORDER BY CO.cf2dynamic_form.seq")->next();
 			        while($rec=$cf2dynamic_form_mas->next()):
-                       if($rec->required):
-                         $field=$fields[$rec->cf_id];	
+			          $field=$fields[$rec->cf_id];
+                       if($rec->required):	
 					     $result["required_fields"][]=$field['col_name']; //Just load the custom fields as per load id
 					   endif;
 					   $result["input_fields"][]=$field['col_name'];
+					   $result['data_type'][$field['col_name']]=$field['data_type'];
+					   $result['label_name'][$field['col_name']]=$field['Field Name'];
 					endwhile;   
 					break;
 		    endwhile;
-             	
+
              return $result;
     }
 
@@ -179,14 +181,25 @@ class Dynamic_forms_model extends \RightNow\Models\Base
         return $return;
     }
 
+    function getNamedIDValue($custom_field,$value){
+        $menu_list=RNCPHP\ConnectAPI::getNamedValues("RightNow\\Connect\\v1_2\\".$custom_field);
+		    foreach($menu_list as $menu):
+		    	if($menu->ID==$value)
+		    		return $menu->LookupName;
+		    endforeach;
+    }
+
     function save_aaq_form_model($data){
         $arr=array();
         $formData = $this->processFields($data, $presentFields);
+
+        // $this->debug($formData);
+        // exit;
        
         try{
             $profile = $this->CI->session->getProfile();
             $cid=$profile->c_id->value;
-            $cid=11;
+            //$cid=11;
             $org_id=$profile->org_id->value;
             $incident = new RNCPHP\Incident();
 
@@ -209,28 +222,41 @@ class Dynamic_forms_model extends \RightNow\Models\Base
 
             //Start Saving the custom fields.
             $fields_to_save=$this->getDynamicFormDataModel($formData['Incident.Product']->value,$formData['Incident.Category']->value);
-            
-            foreach($fields_to_save['input_fields'] as $fs):
-                $fs_explode=explode("c$",$fs);
-	            $custom_field_index="Incident.CustomFields.c.".$fs_explode[1];
-	            $field_name=$fs_explode[1];
-	            $formData[$custom_field_index]->value;
-	            if($formData[$custom_field_index]->value):
-	            	if(intval($custom_field_index->value))
-	                    $incident->CustomFields->c->$field_name=(int)$formData[$custom_field_index]->value;
-	                else
-                        $incident->CustomFields->c->$field_name=$formData[$custom_field_index]->value;
-                endif;    
-            endforeach;
+            //$this->debug($fields_to_save['input_fields']);
+            //exit;
+            if(sizeof($fields_to_save['input_fields'])):
+	            foreach($fields_to_save['input_fields'] as $fs):
+	                $fs_explode=explode("c$",$fs);
+		            $custom_field_index="Incident.CustomFields.c.".$fs_explode[1];
+		            $field_name=$fs_explode[1];
+		            //Data printing.
+		            if($fields_to_save['data_type'][$fs]=="Menu")
+		            	$data_printer.=$fields_to_save['label_name'][$fs]." : ".$this->getNamedIDValue($custom_field_index,$formData[$custom_field_index]->value)."\n";               
+		            else
+		            	$data_printer.=$fields_to_save['label_name'][$fs]." : ".$formData[$custom_field_index]->value."\n";
+	                   
+		            //Data Saving.
+		            if($formData[$custom_field_index]->value):
+		            	if($fields_to_save['data_type'][$fs]=="Integer")
+		                    $incident->CustomFields->c->$field_name=(int)$formData[$custom_field_index]->value;
+		                else if($fields_to_save['data_type'][$fs]=="Date Field")
+		                	$incident->CustomFields->c->$field_name=strtotime($formData[$custom_field_index]->value);
+		                else if($fields_to_save['data_type'][$fs]=="Menu")
+		                	$incident->CustomFields->c->$field_name=(int)$formData[$custom_field_index]->value;
+		                else
+	                        $incident->CustomFields->c->$field_name=$formData[$custom_field_index]->value;
+	                endif;    
+	            endforeach;
+	         endif;   
 
            
-            if($formData['Incident.Threads']->value)
+            if($formData['Incident.Threads']->value or $data_printer)
             {
                 $incident->Threads = new RNCPHP\ThreadArray();
                 $incident->Threads[0] = new RNCPHP\Thread();
                 $incident->Threads[0]->EntryType = new RNCPHP\NamedIDOptList();
                 $incident->Threads[0]->EntryType->ID = 3; // Used the ID here. See the Thread object for definition
-                $incident->Threads[0]->Text =$formData['Incident.Threads']->value;
+                $incident->Threads[0]->Text =$formData['Incident.Threads']->value."\n \n *********************\n".$data_printer;
             }
 
             $value = $formData['Incident.FileAttachments']->value;

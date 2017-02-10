@@ -32,15 +32,16 @@ Custom.Widgets.dynamicForms.CustomTextInput = RightNow.Widgets.TextInput.extend(
 				//Do comparision now and make it valid now.
 				if(form_enabled_data['form_enabled']['form_id']==current_form_id){
 					// console.log(current_name);
-					 
-                    for(i=0;i<form_enabled_data['form_enabled']['required_fields'].length;i++){
-                    	req_field=form_enabled_data['form_enabled']['required_fields'][i];
-                    	req_field=req_field.split("c$").join("Incident.CustomFields.c.");
-                    	if(req_field==current_name){
-                    		var labelnew = document.getElementById("rn_" + this.instanceID + "_" + "Label");
-                    		labelnew.innerHTML=labelnew.innerHTML+"<span class='rn_Required'> *</span>";
-                    		this.data.attrs.required=true;
-                    	}
+					if(form_enabled_data['form_enabled']['required_fields'].length){ 
+	                    for(i=0;i<form_enabled_data['form_enabled']['required_fields'].length;i++){
+	                    	req_field=form_enabled_data['form_enabled']['required_fields'][i];
+	                    	req_field=req_field.split("c$").join("Incident.CustomFields.c.");
+	                    	if(req_field==current_name){
+	                    		var labelnew = document.getElementById("rn_" + this.instanceID + "_" + "Label");
+	                    		labelnew.innerHTML=labelnew.innerHTML.split("*").join("")+"<span class='rn_Required'> *</span>";
+	                    		this.data.attrs.required=true;
+	                    	}
+	                    }
                     }
 				}				
 			    
