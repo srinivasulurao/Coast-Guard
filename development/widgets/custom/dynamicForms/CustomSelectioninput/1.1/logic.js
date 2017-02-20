@@ -22,7 +22,7 @@ Custom.Widgets.dynamicForms.CustomSelectioninput = RightNow.Widgets.SelectionInp
 				this.data.attrs.required=false; //Always required is false.
 				var current_name = this.data.js.name;
 				current_form_id=this.data.attrs.form_id;
-				
+				if(prod_id){
 				form_enabled_data=JSON.parse(document.getElementById('form_enabled_data').value);
 
 				//Do comparision now and make it valid now.
@@ -40,7 +40,7 @@ Custom.Widgets.dynamicForms.CustomSelectioninput = RightNow.Widgets.SelectionInp
 	                    }
 	                }
 				}				
-		
+		}
 
 		}//_getCustomFields ends here.
 });

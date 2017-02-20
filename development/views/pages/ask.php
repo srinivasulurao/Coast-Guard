@@ -52,7 +52,7 @@ $initForms=$ci->model('custom/dynamic_forms_model')->loadInputFields();
         foreach($fields as $field):
           $data_type=$field['data_type'];
           $name=$field['table'].".".$field['field_name'];  
-         
+         if($field['visible']): 
       ?>
        <?php if($data_type=="Text Field"): ?>
           <rn:widget path="custom/dynamicForms/CustomTextInput" name="#rn:php:$name#" form_id="#rn:php:$form_id#"/>
@@ -64,7 +64,7 @@ $initForms=$ci->model('custom/dynamic_forms_model')->loadInputFields();
           <rn:widget path="custom/dynamicForms/CustomDateInput" name="#rn:php:$name#" form_id="#rn:php:$form_id#"/>
        <?php endif; ?>   
        <?php if($data_type=="Integer"): ?>
-          <rn:widget path="custom/dynamicForms/FormCustomInput" name="#rn:php:$name#" form_id="#rn:php:$form_id#"/>
+          <rn:widget path="custom/dynamicForms/CustomTextInput" name="#rn:php:$name#" form_id="#rn:php:$form_id#"/>
        <?php endif; ?>   
        <?php if($data_type=="Text Area"): ?>
           <rn:widget path="custom/dynamicForms/FormCustomInput" name="#rn:php:$name#" form_id="#rn:php:$form_id#"/>
@@ -79,6 +79,7 @@ $initForms=$ci->model('custom/dynamic_forms_model')->loadInputFields();
 
 
       <?php
+        endif; // Should Be visible.
         endforeach;
       echo "</div>";
       endforeach;

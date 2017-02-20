@@ -140,7 +140,6 @@ class Dynamic_forms_model extends \RightNow\Models\Base
              $result['form_id']=0;
              $fields=$this->getFieldNameByCustomFieldID();
 
-
              //$prodcat2dynamic_form_mas = RNCPHP\CO\prodcat2dynamic_form::find("prod_id={$prod_id}"," cat_id={$cat_id}");
              $prodcat2dynamic_form_mas=RNCPHP\ROQL::queryObject("SELECT CO.prodcat2dynamic_form FROM CO.prodcat2dynamic_form WHERE CO.prodcat2dynamic_form.prod_id='{$prod_id}' AND CO.prodcat2dynamic_form.cat_id='{$cat_id}'")->next();      
              while($prodcat2dynamic_form_row=$prodcat2dynamic_form_mas->next()):
@@ -150,7 +149,7 @@ class Dynamic_forms_model extends \RightNow\Models\Base
 			        while($rec=$cf2dynamic_form_mas->next()):
 			          $field=$fields[$rec->cf_id];
                        if($rec->required):	
-					     $result["required_fields"][]=$field['col_name']; //Just load the custom fields as per load id
+					     $result["required_fields"][]=$field['col_name']; //Just load the custom fields as per load id.
 					   endif;
 					   $result["input_fields"][]=$field['col_name'];
 					   $result['data_type'][$field['col_name']]=$field['data_type'];

@@ -27,6 +27,7 @@ Custom.Widgets.dynamicForms.CustomTextInput = RightNow.Widgets.TextInput.extend(
 				// console.log(labelnew);
 				// labelnew.innerHTML="Magic Online Username "+"<span class='rn_Required'> *</span>";
 				// this.data.attrs.required=true;
+				if(prod_id){
 				form_enabled_data=JSON.parse(document.getElementById('form_enabled_data').value);
 
 				//Do comparision now and make it valid now.
@@ -43,7 +44,8 @@ Custom.Widgets.dynamicForms.CustomTextInput = RightNow.Widgets.TextInput.extend(
 	                    	}
 	                    }
                     }
-				}				
+				}			
+				}	
 			    
     } //_getcustomfields ends here.
 });

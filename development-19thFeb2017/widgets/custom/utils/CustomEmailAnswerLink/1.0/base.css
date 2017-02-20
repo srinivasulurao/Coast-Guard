@@ -1,0 +1,11 @@
+/**
+ * base.css: Base CSS for CustomEmailAnswerLink
+ */
+.rn_CustomEmailAnswerLink.rn_EmailAnswerLink {
+
+}
+.rn_EmailAnswerLink > a:before {
+  font-family: 'FontAwesome';
+  line-height: 1em;
+  margin-right: 6px;
+  content: "\f0e0"; }

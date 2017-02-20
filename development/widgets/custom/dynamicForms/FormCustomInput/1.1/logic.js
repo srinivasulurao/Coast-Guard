@@ -25,12 +25,11 @@ Custom.Widgets.dynamicForms.FormCustomInput = RightNow.Widgets.extend({
                 this.data.attrs.required=false; //Always required is false.
                 var current_name = this.data.js.name;
                 current_form_id=this.data.attrs.form_id;
-                
+                if(prod_id){
                 form_enabled_data=JSON.parse(document.getElementById('form_enabled_data').value);
-
                 //Do comparision now and make it valid now.
                 if(form_enabled_data['form_enabled']['form_id']==current_form_id){
-                    // console.log(current_name);
+                    //console.log(current_name);
                     if(form_enabled_data['form_enabled']['required_fields'].length){  
                         for(i=0;i<form_enabled_data['form_enabled']['required_fields'].length;i++){
                             req_field=form_enabled_data['form_enabled']['required_fields'][i];
@@ -42,8 +41,8 @@ Custom.Widgets.dynamicForms.FormCustomInput = RightNow.Widgets.extend({
                             }
                         }
                     }
-                }               
-        
+                  }               
+                }
 
         }//_getCustomFields ends here.
 });

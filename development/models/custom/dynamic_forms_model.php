@@ -145,7 +145,7 @@ class Dynamic_forms_model extends \RightNow\Models\Base
              while($prodcat2dynamic_form_row=$prodcat2dynamic_form_mas->next()):
              	$result['form_id']=$prodcat2dynamic_form_row->form_id;
                 $form_id=$prodcat2dynamic_form_row->form_id;
-             	    $cf2dynamic_form_mas = RNCPHP\ROQL::queryObject("SELECT CO.cf2dynamic_form FROM CO.cf2dynamic_form WHERE CO.cf2dynamic_form.form_id='{$form_id}' ORDER BY CO.cf2dynamic_form.seq")->next();
+             	    $cf2dynamic_form_mas = RNCPHP\ROQL::queryObject("SELECT CO.cf2dynamic_form FROM CO.cf2dynamic_form WHERE CO.cf2dynamic_form.form_id='{$form_id}' AND  CO.cf2dynamic_form.visible='1' ORDER BY CO.cf2dynamic_form.seq")->next();
 			        while($rec=$cf2dynamic_form_mas->next()):
 			          $field=$fields[$rec->cf_id];
                        if($rec->required):	
